@@ -1,0 +1,70 @@
+@using JqueryTable.Models
+ 
+@model IEnumerable<Okullar>
+ 
+<div id="Durum"></div>
+<table>
+    <thead>
+        <tr>
+            <th>Okul Adı</th>
+            <th>Adres</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Okul in Model)
+        {
+            <tr>
+                <td>@Okul.OkulAdi</td>
+                <td>@Okul.Adres</td>
+                <td><a href="#" class="Sil" name="@Okul.ID">Sil</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div id="wait" style="display:none;width:133px;height:25px;border:0 solid black;position:absolute;top:50%;left:50%;padding:2px;text-align:center;">
+    <img src="~/Content/IslemYapiliyor.gif" /><br>İşleniyor...
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".Sil").click(function () {
+            //Herhangi bir satırdaki <a..> </a> tagı tıklandığı zaman tetiklenecek olan metotdur.
+            if (confirm("Okulu silmek istediğinizden emin misiniz?")) {
+                var ID = $(this).attr('name');
+                //Tıklanan ilgili linkin name özelliğindeki ID değerini çekiyoruz.
+                $.ajax({
+                    url: '/Home/Sil/' + ID,//Ajax ile tetiklenecek ilgili adresi belirliyoruz.
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#Durum").html(data);
+                        //Gelen Json veriyi ilgili taga yerleştiriyoruz.
+                    }
+                });
+ 
+                $(this).parent('td').parent('tr').remove();
+                //Ajax işlemi başarıyla sonuçlandıktan sonra ilgili satırı bu komut ile siliyoruz.
+            }
+        });
+        $(document).ajaxStart(function () {
+            $("#wait").css("display", "block");
+        });
+        $(document).ajaxComplete(function () {
+            $("#wait").css("display", "none");
+        });
+	//Komutlarıyla Ajax işlemlerinin başlayıp(ajaxStart) bittiği(ajaxComplete) anda işlem yapabiliyoruz.
+    });
+</script>
+
+//Controller
+
+[HttpPost]
+public JsonResult Sil(int id)
+{
+    VeriTabaniDataContext Veri = new VeriTabaniDataContext();
+    Okullar Okul = Veri.Okullars.FirstOrDefault(o => o.ID == id);
+    Veri.Okullars.DeleteOnSubmit(Okul);
+    Veri.SubmitChanges();
+    return Json("<strong>" + Okul.OkulAdi + "</strong> isimli okul başarıyla silinmiştir.", JsonRequestBehavior.AllowGet);
+}

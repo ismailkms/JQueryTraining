@@ -1,0 +1,26 @@
+<html>
+
+    <head>    
+		<meta charset="utf-8">
+        <title>Jquery</title>   
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+	</head>
+
+    <body>
+		<div></div>
+        <p id="result"></p>
+		
+		<button>Click</button>
+    </body>
+	
+	<script>
+		$(document).ready(function(){
+			$("button").click(function(){
+				var txt='{"name":"İsmail","surname":"Kamış"}';
+				var obj=JSON.parse(txt); //parseJSON() 3.0'da kullanımdan kaldırılmıştır.
+				$("p").html(obj.name+" "+obj.surname);
+			});
+		});
+	</script>
+</html>

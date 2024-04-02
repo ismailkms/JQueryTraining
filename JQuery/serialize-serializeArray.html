@@ -1,0 +1,44 @@
+<html>
+
+    <head>    
+		<meta charset="utf-8">
+        <title>Jquery</title>   
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+	</head>
+
+    <body>
+		<div></div>
+        <p id="result"></p>
+		
+		<form>
+			İsim: <input type="text" name="firstname" value="İsmail"><br>
+			Soyad: <input type="text" name="lastname" value="Kamış"><br>
+		</form>
+		
+		<button id="serialize">Serialize</button>
+		<button id="serializeArray">SerializeArray</button>
+    </body>
+	
+	<script>
+		$(document).ready(function(){
+		
+			$("#serialize").click(function(){
+				$("#result").text($("form").serialize());
+				//text() – seçilen elemanların metin içeriklerine atama yapar veya onlara erişerek işlem yapar.
+				//html() – HTML işaretçileri de dâhil, seçilen elemanların içeriğini atar ya da onlara erişir.
+				//val() – Form alanlarının değerine erişir veya onlara atama yapar.
+			});
+			//Form elementleri kümesini gönderilmek üzere string olarak kodlar
+			
+			$("#serializeArray").click(function(){
+				var x = $("form").serializeArray();
+				$.each(x, function(index,item){
+					$("#result").append(item.name+": "+item.value+"<br>" );
+					//jQuery append() metodu, seçilmiş HTML elemanlarının sonuna içeriği ekler.
+				})
+			});
+			//Form elementleri kümesini gönderilmek üzere dizi olarak kodlar
+		});
+	</script>
+</html>
